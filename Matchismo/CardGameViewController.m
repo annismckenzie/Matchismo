@@ -45,10 +45,7 @@
     [cardButton setTitle:@"" forState:UIControlStateSelected|UIControlStateHighlighted];
     [cardButton setTitle:card.contents forState:UIControlStateSelected];
     [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
-
-    [cardButton setBackgroundImage:cardBackImage forState:UIControlStateNormal];
-    [cardButton setBackgroundImage:nil forState:UIControlStateSelected]; // doesn't work properly
-    [cardButton setBackgroundImage:nil forState:UIControlStateSelected|UIControlStateDisabled]; // doesn't work properly
+    [cardButton setBackgroundImage:(card.isFaceUp ? nil : cardBackImage) forState:UIControlStateNormal];
 
     cardButton.selected = card.isFaceUp;
     cardButton.enabled = !card.isUnplayable;
