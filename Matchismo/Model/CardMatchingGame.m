@@ -61,7 +61,9 @@
   dealScore -= FLIP_COST;
 
   if (![cards count]) return dealScore;
-  if ([self.mode isEqualToString:@"3-card"] && [cards count] < 2) return dealScore;
+  if ([self.mode isEqualToString:@"3-card"] && [cards count] < 2) {
+    return dealScore;
+  }
 
   int matchScore = [card match:cards];
   if (matchScore) {
@@ -77,8 +79,7 @@
   return dealScore;
 }
 
-- (id)initWithCardCount:(NSUInteger)count
-              usingDeck:(Deck *)deck
+- (id)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck
 {
   self = [super init];
 
