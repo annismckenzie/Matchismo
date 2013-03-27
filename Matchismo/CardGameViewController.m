@@ -82,7 +82,7 @@
 
 - (IBAction)restartGame:(UIButton *)sender
 {
-  _game = nil;
+  self.game = nil;
   self.gameResult = nil;
   self.flipCount = 0;
   [self updateUI];
