@@ -55,6 +55,25 @@
 
   return cell;
 }
+
+- (void)sortGameResultsByKey:(NSString *)key ascending:(BOOL)ascending
+{
+  self.allGameResults = [self.allGameResults sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:key ascending:ascending]]];
+}
+
+- (IBAction)orderResultsByDate
+{
+  [self sortGameResultsByKey:@"end" ascending:NO];
+}
+
+- (IBAction)orderResultsByScore
+{
+  [self sortGameResultsByKey:@"score" ascending:NO];
+}
+
+- (IBAction)orderResultsByDuration
+{
+  [self sortGameResultsByKey:@"duration" ascending:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -62,6 +81,7 @@
   [super viewWillAppear:animated];
 
   [self updateUI];
+  [self sortGameResultsByKey:@"score" ascending:NO];
 }
 
 - (void)setup
