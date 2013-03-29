@@ -8,20 +8,53 @@
 
 #import "GameResultViewController.h"
 #import "GameResult.h"
+#import "GameResultsTableView.h"
 
-@interface GameResultViewController()
-@property (weak, nonatomic) IBOutlet UITextView *display;
+@interface GameResultViewController() <UITableViewDataSource>
+@property (nonatomic, strong) NSArray *allGameResults;
+@property (weak, nonatomic) IBOutlet GameResultsTableView *gameResultsTableView;
 @end
 
 @implementation GameResultViewController
 
+@synthesize allGameResults = _allGameResults; // needed because we're implementing both getter and setter
+
+- (NSArray *)allGameResults
+{
+  if (!_allGameResults) _allGameResults = [GameResult allGameResults];
+
+  return _allGameResults;
+}
+
+- (void)setAllGameResults:(NSArray *)allGameResults
+{
+  _allGameResults = allGameResults;
+
+  [self.gameResultsTableView reloadData]; // refresh table view
+}
+
 - (void)updateUI
 {
-  NSString *displayText = @"";
-  for (GameResult *result in [GameResult allGameResults]) {
-    displayText = [displayText stringByAppendingFormat:@"Score: %d (%@, %0g)\n", result.score, result.end, round(result.duration)];
-  }
-  self.display.text = displayText;
+  self.allGameResults = nil; // needs to be reloaded every time this view is refreshed
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+  return [self.allGameResults count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GameResultCell" forIndexPath:indexPath];
+  GameResult *result = self.allGameResults[indexPath.item];
+  cell.textLabel.text = [NSString stringWithFormat:@"%d", result.score];
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+  [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+  cell.detailTextLabel.text = [NSString stringWithFormat:@"%@; %0gs", [dateFormatter stringFromDate:result.end], round(result.duration)];
+
+  return cell;
+}
 }
 
 - (void)viewWillAppear:(BOOL)animated

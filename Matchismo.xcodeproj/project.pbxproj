@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD4A1C911705E45300586CDC /* GameResultsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = FD4A1C901705E45300586CDC /* GameResultsTableView.m */; };
 		FD92146416FE33CF002AC43E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD92146316FE33CF002AC43E /* UIKit.framework */; };
 		FD92146616FE33CF002AC43E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD92146516FE33CF002AC43E /* Foundation.framework */; };
 		FD92146816FE33CF002AC43E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD92146716FE33CF002AC43E /* CoreGraphics.framework */; };
@@ -29,6 +30,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FD4A1C8F1705E45300586CDC /* GameResultsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameResultsTableView.h; sourceTree = "<group>"; };
+		FD4A1C901705E45300586CDC /* GameResultsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameResultsTableView.m; sourceTree = "<group>"; };
 		FD92146016FE33CF002AC43E /* Matchismo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Matchismo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD92146316FE33CF002AC43E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FD92146516FE33CF002AC43E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -109,6 +112,8 @@
 			isa = PBXGroup;
 			children = (
 				FD92147B16FE33CF002AC43E /* MainStoryboard.storyboard */,
+				FD4A1C8F1705E45300586CDC /* GameResultsTableView.h */,
+				FD4A1C901705E45300586CDC /* GameResultsTableView.m */,
 				FD9214E217021685002AC43E /* GameResult.h */,
 				FD9214E317021685002AC43E /* GameResult.m */,
 				FD9214DF1701077E002AC43E /* GameResultViewController.h */,
@@ -233,6 +238,7 @@
 				FD92149516FE5B65002AC43E /* CardMatchingGame.m in Sources */,
 				FD9214E11701077E002AC43E /* GameResultViewController.m in Sources */,
 				FD9214E417021685002AC43E /* GameResult.m in Sources */,
+				FD4A1C911705E45300586CDC /* GameResultsTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,6 +361,7 @@
 				FD92148516FE33CF002AC43E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
