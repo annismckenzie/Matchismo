@@ -18,6 +18,7 @@
 #define ALL_RESULTS_KEY @"GameResult_AllResults"
 #define START_KEY @"StartDate"
 #define END_KEY   @"EndDate"
+#define GAME_KEY  @"Game"
 #define SCORE_KEY @"Score"
 
 + (NSArray *)allGameResults
@@ -40,6 +41,8 @@
       NSDictionary *resultDictionary = (NSDictionary *)plist;
       _start = resultDictionary[START_KEY];
       _end   = resultDictionary[END_KEY];
+      _game  = resultDictionary[GAME_KEY];
+      if (!_game) _game = @"Card Game";
       _score = [resultDictionary[SCORE_KEY] intValue];
       if (!_start || !_end) self = nil;
     }
@@ -60,14 +63,15 @@
 
 - (id)asPropertyList
 {
-  return @{ START_KEY: self.start, END_KEY: self.end, SCORE_KEY: @(self.score) };
+  return @{ START_KEY: self.start, END_KEY: self.end, SCORE_KEY: @(self.score), GAME_KEY: self.game };
 }
 
 // designated initializer
-- (id)init
+- (id)initWithGame:(NSString *)game
 {
   self = [super init];
   if (self) {
+    _game  = game;
     _start = [NSDate date];
     _end   = _start;
   }

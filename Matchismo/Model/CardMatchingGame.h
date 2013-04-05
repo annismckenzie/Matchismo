@@ -15,14 +15,14 @@
 
 // designated initializer
 - (id)initWithCardCount:(NSUInteger)count
-              usingDeck:(Deck *)deck;
+              usingDeck:(Deck *)deck
+               gameMode:(NSString *)gameMode;
 
 - (void)flipCardAtIndex:(NSUInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;
 
 @property (readonly, nonatomic) int score;
 @property (readonly, nonatomic) int lastMatchScore;
-@property (strong, nonatomic, readonly) NSArray *lastFlip;
-@property (strong, nonatomic) NSString *mode;
+@property (readonly, nonatomic, strong) NSMutableArray *lastFlip;
 
 @end

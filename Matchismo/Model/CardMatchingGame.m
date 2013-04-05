@@ -11,8 +11,9 @@
 @interface CardMatchingGame()
 @property (readwrite, nonatomic) int score;
 @property (readwrite, nonatomic) int lastMatchScore;
-@property (readwrite, nonatomic) NSArray *lastFlip;
+@property (readwrite, nonatomic) NSMutableArray *lastFlip;
 @property (strong, nonatomic) NSMutableArray *cards; // of Card
+@property (strong, nonatomic) NSString *mode; // @"2-card" or @"3-card"
 @end
 
 @implementation CardMatchingGame
@@ -22,6 +23,13 @@
   if (!_cards) _cards = [[NSMutableArray alloc] init];
 
   return _cards;
+}
+
+- (NSMutableArray *)lastFlip
+{
+  if (!_lastFlip) _lastFlip = [[NSMutableArray alloc] init];
+
+  return _lastFlip;
 }
 
 - (Card *)cardAtIndex:(NSUInteger)index
@@ -34,7 +42,8 @@
   Card *card = [self cardAtIndex:index];
   int dealScore = 0;
   if (card && !card.isUnplayable) {
-    self.lastFlip = @[card];
+    [self resetLastFlip];
+    [self.lastFlip addObject:card];
     if (!card.isFaceUp) {
       NSMutableArray *otherCards = [[NSMutableArray alloc] init];
       for (Card *otherCard in self.cards) {
@@ -44,7 +53,7 @@
       }
       dealScore += [self match:otherCards withCard:card];
     } else {
-      self.lastFlip = @[];
+      [self.lastFlip removeObject:card];
     }
     card.faceUp = !card.isFaceUp;
     self.score += dealScore;
@@ -52,8 +61,14 @@
   }
 }
 
-#define MATCH_BONUS 4
-#define MISMATCH_PENALTY 2
+- (void)resetLastFlip
+{
+  if (([self.mode isEqualToString:@"3-card"] && [self.lastFlip count] == 3) ||
+      ([self.mode isEqualToString:@"2-card"] && [self.lastFlip count] == 2)) {
+    [self.lastFlip removeAllObjects];
+  }
+}
+
 #define FLIP_COST 1
 - (int)match:(NSMutableArray *)cards withCard:(Card *)card
 {
@@ -66,24 +81,32 @@
   }
 
   int matchScore = [card match:cards];
-  if (matchScore) {
+  if (matchScore > 0) {
     card.unplayable = YES;
     for (Card *otherCard in cards) { otherCard.unplayable = YES; }
-    dealScore += matchScore * MATCH_BONUS;
+    dealScore += matchScore;
   } else {
     for (Card *otherCard in cards) { otherCard.faceUp = NO; }
-    dealScore -= MISMATCH_PENALTY;
+    card.faceUp = YES;
+    dealScore += matchScore;
   }
-  self.lastFlip = [cards arrayByAddingObject:card];
 
   return dealScore;
 }
 
-- (id)initWithCardCount:(NSUInteger)count usingDeck:(Deck *)deck
+- (NSArray *)gameModes
+{
+  return @[@"2-card", @"3-card"];
+}
+
+- (id)initWithCardCount:(NSUInteger)count
+              usingDeck:(Deck *)deck
+               gameMode:(NSString *)gameMode
 {
   self = [super init];
 
-  if (self) {
+  if (self && [[self gameModes] containsObject:gameMode]) {
+    self.mode = gameMode;
     for (int i = 0; i < count; i++) {
       Card *card = [deck drawRandomCard];
       if (card) {

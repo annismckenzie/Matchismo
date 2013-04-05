@@ -19,23 +19,34 @@
 @property (strong, nonatomic) GameResult *gameResult;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *lastFlipResultLabel;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *matchModeSwitch;
 @end
 
 @implementation CardGameViewController
 
 - (GameResult *)gameResult
 {
-  if (!_gameResult) _gameResult = [[GameResult alloc] init];
+  if (!_gameResult) _gameResult = [[GameResult alloc] initWithGame:@"Memory"];
 
   return _gameResult;
 }
 
 - (CardMatchingGame *)game
 {
-  if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count usingDeck:[[PlayingCardDeck alloc] init]];
+  if (!_game) _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
+                                                        usingDeck:[self gameDeck]
+                                                         gameMode:[self gameMode]];
 
   return _game;
+}
+
+- (Deck *)gameDeck
+{
+  return [[PlayingCardDeck alloc] init];
+}
+
+- (NSString *)gameMode
+{
+  return @"2-card";
 }
 
 - (void)setCardButtons:(NSArray *)cardButtons
@@ -46,30 +57,35 @@
 
 - (void)updateUI
 {
-  UIImage *cardBackImage = [UIImage imageNamed:@"cardback.jpg"];
-  UIImage *blank = [[UIImage alloc] init];
   for (UIButton *cardButton in self.cardButtons) {
-    Card *card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
-
-    [cardButton setTitle:card.contents forState:UIControlStateSelected];
-    [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
-    [cardButton setImage:cardBackImage forState:UIControlStateNormal];
-    [cardButton setImage:blank forState:UIControlStateSelected];
-    [cardButton setImage:blank forState:UIControlStateSelected|UIControlStateDisabled];
-
-    cardButton.selected = card.isFaceUp;
-    cardButton.enabled = !card.isUnplayable;
-    cardButton.alpha = card.isUnplayable ? 0.3 : 1.0;
+    [self configureCardButton:cardButton forCard:[self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]]];
   }
   self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
-  self.lastFlipResultLabel.text = [self formatLastFlipResult];
+  self.lastFlipResultLabel.attributedText = [self formatLastFlipResult:self.game.lastFlip forMatchScore:self.game.lastMatchScore];
+}
+
+- (UIButton *)configureCardButton:(UIButton *)cardButton forCard:(Card *)card
+{
+  UIImage *cardBackImage = [UIImage imageNamed:@"cardback.jpg"];
+  UIImage *blank = [[UIImage alloc] init];
+
+  [cardButton setTitle:card.contents forState:UIControlStateSelected];
+  [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
+  [cardButton setImage:cardBackImage forState:UIControlStateNormal];
+  [cardButton setImage:blank forState:UIControlStateSelected];
+  [cardButton setImage:blank forState:UIControlStateSelected|UIControlStateDisabled];
+
+  cardButton.selected = card.isFaceUp;
+  cardButton.enabled = !card.isUnplayable;
+  cardButton.alpha = card.isUnplayable ? 0.3 : 1.0;
+
+  return cardButton;
 }
 
 - (void)setFlipCount:(int)flipCount
 {
   _flipCount = flipCount;
   self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d", self.flipCount];
-  self.matchModeSwitch.enabled = !flipCount;
 }
 
 - (IBAction)flipCard:(UIButton *)sender
@@ -88,19 +104,21 @@
   [self updateUI];
 }
 
-- (IBAction)changeGameMode:(UISegmentedControl *)sender {
-  self.game.mode = [sender titleForSegmentAtIndex:sender.selectedSegmentIndex]; // either @"2-card" or @"3-card"
-}
-
-- (NSString *)formatLastFlipResult
+- (NSAttributedString *)formatLastFlipResult:(NSArray *)lastFlip forMatchScore:(int)matchScore
 {
-  if ([self.game.lastFlip count] == 0) {
-    return @"";
-  } else if ([self.game.lastFlip count] == 1) {
-    return [NSString stringWithFormat:@"Flipped up %@", [self.game.lastFlip lastObject]];
+  NSMutableAttributedString *att = [[NSMutableAttributedString alloc] initWithString:@""];
+  if ([lastFlip count] == 0) {
+    return att;
+  } else if ([lastFlip count] == 1) {
+    [att appendAttributedString:[[NSAttributedString alloc] initWithString:@"Flipped up "]];
+    [att appendAttributedString:[[NSAttributedString alloc] initWithString:[lastFlip componentsJoinedByString:@" and "]]];
+
+    return att;
   } else {
-    NSString *format = self.game.lastMatchScore < 0 ? @"%@ don't match! %d point penalty!" : @"Matched %@ for %d points!";
-    return [NSString stringWithFormat:format, [self.game.lastFlip componentsJoinedByString:@" and "], abs(self.game.lastMatchScore)];
+    NSString *format = matchScore < 0 ? @"%@ don't match! %d point penalty!" : @"Matched %@ for %d points!";
+    [att appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:format, [lastFlip componentsJoinedByString:@" and "], abs(matchScore)]]];
+
+    return att;
   }
 }
 

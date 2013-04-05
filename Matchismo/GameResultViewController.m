@@ -47,11 +47,11 @@
 {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GameResultCell" forIndexPath:indexPath];
   GameResult *result = self.allGameResults[indexPath.item];
-  cell.textLabel.text = [NSString stringWithFormat:@"%d", result.score];
+  cell.detailTextLabel.text = [NSString stringWithFormat:@"%d points in %0gs", result.score, round(result.duration)];
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
   [dateFormatter setDateStyle:NSDateFormatterShortStyle];
   [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-  cell.detailTextLabel.text = [NSString stringWithFormat:@"%@; %0gs", [dateFormatter stringFromDate:result.end], round(result.duration)];
+  cell.textLabel.text = [NSString stringWithFormat:@"%@ on %@", result.game, [dateFormatter stringFromDate:result.end]];
 
   return cell;
 }

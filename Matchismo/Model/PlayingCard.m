@@ -20,11 +20,10 @@
   }
 
   for (NSString *object in counts) {
-    //NSLog(@"Count for object %@: %d", object, [counts countForObject:object]);
     if ([counts countForObject:object] == 2) {
-      score = [[[self class] validSuits] containsObject:object] ? 1 : 4; // 2-card game: score 1 if it's a suit, score 4 if it's a rank
+      score = [[[self class] validSuits] containsObject:object] ? 4 : 16; // 2-card game: score 4 if it's a suit, score 16 if it's a rank
     } else if ([counts countForObject:object] == 3) {
-      score = [[[self class] validSuits] containsObject:object] ? 4 : 16; // 3-card game: score 4 if it's a suit, score 16 if it's a rank
+      score = [[[self class] validSuits] containsObject:object] ? 8 : 32; // 3-card game: score 8 if it's a suit, score 32 if it's a rank
       break;
     }
   }
