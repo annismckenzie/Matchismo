@@ -961,11 +961,8 @@
         <class className="GameResultViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GameResultViewController.h"/>
             <relationships>
-                <relationship kind="outlet" name="gameResultsTableView" candidateClass="GameResultsTableView"/>
+                <relationship kind="outlet" name="gameResultsTableView" candidateClass="UITableView"/>
             </relationships>
-        </class>
-        <class className="GameResultsTableView" superclassName="UITableView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/GameResultsTableView.h"/>
         </class>
         <class className="SetCardGameViewController" superclassName="CardGameViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/SetCardGameViewController.h"/>

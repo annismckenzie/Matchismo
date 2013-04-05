@@ -8,11 +8,10 @@
 
 #import "GameResultViewController.h"
 #import "GameResult.h"
-#import "GameResultsTableView.h"
 
 @interface GameResultViewController() <UITableViewDataSource>
 @property (nonatomic, strong) NSArray *allGameResults;
-@property (weak, nonatomic) IBOutlet GameResultsTableView *gameResultsTableView;
+@property (weak, nonatomic) IBOutlet UITableView *gameResultsTableView;
 @end
 
 @implementation GameResultViewController
